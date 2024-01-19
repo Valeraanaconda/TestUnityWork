@@ -1,4 +1,5 @@
 ﻿using AxGrid.Base;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,17 +32,32 @@ public class SpiningElement : MonoBehaviourExtBind
         Vector3 currentPosition = transform.localPosition;
 
         var newY = currentPosition.y - Speed;
+        CheckTargetY(newY,currentPosition);
+        
+    }
 
-        if (newY <= _targetY)
+    public void GoToEndPosition(float dist,float duration)
+    {
+        Vector3 currentPosition = transform.localPosition;
+        float newY = currentPosition.y - dist;
+
+        // Используйте DOTween для создания анимации движения
+        transform.DOLocalMoveY(newY, duration);
+        
+    }
+    
+    private void CheckTargetY(float Y,Vector3 currentPosition)
+    {
+        if (Y <= _targetY)
         {
             RestartPosition();
         }
         else
         {
-            transform.localPosition = new Vector2(currentPosition.x, newY);
+            transform.localPosition = new Vector2(currentPosition.x, Y);
         }
     }
-        
+    
     private void RestartPosition()
     {
         transform.localPosition = _initialPosition;

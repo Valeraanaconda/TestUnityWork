@@ -10,7 +10,9 @@ public class SpinController : MonoBehaviourExtBind
 {
     [SerializeField] private List<SpiningElement> _spiningElements;
     [SerializeField] private float _speed = 1.0f;
-    [SerializeField] private float _duration = 1f;
+    [SerializeField] private float _startDuration = 1f;
+    [SerializeField] private float _stopDuration = 1f;
+    public PointRaycatser raycster; 
 
     private Action _OnSpin;
     private float _startSpeed = 0f;
@@ -36,7 +38,7 @@ public class SpinController : MonoBehaviourExtBind
 
     private Task StartTweenAnimation(List<SpiningElement> spinPair)
     { 
-        return DOTween.To(() => _startSpeed, x => _startSpeed = x, _speed, _duration)
+        return DOTween.To(() => _startSpeed, x => _startSpeed = x, _speed, _startDuration)
             .OnUpdate(()=>ChangeSpeed(spinPair, _startSpeed))
             .OnComplete(()=>
             {
@@ -80,11 +82,29 @@ public class SpinController : MonoBehaviourExtBind
     [Bind("OnStopSpin")]
     private void StopSpin()
     {
-        _isSpin = false;
+        //_isSpin = false;
         
-        foreach (var value in _spiningElements)
+        // foreach (var value in _spiningElements)
+        // {
+        //     _OnSpin -= value.Spin;
+        // }
+        
+        List<SpiningElement> pair = new List<SpiningElement>();
+
+        foreach (var element in _spiningElements)
         {
-            _OnSpin -= value.Spin;
+            pair.Add(element);
+            _OnSpin -= element.Spin;
+            
+
+            if (pair.Count == 2)
+            {
+                foreach (var value in pair)
+                {
+                    value.GoToEndPosition(raycster.GetDistance(),_stopDuration);
+                }
+                return;
+            }
         }
     }
 }
