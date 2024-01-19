@@ -34,7 +34,7 @@ public class SpinController : MonoBehaviourExtBind
         }
     }
 
-    private Task StartTweenAnimation(List<SpiningElement> spinPair)
+    private Task StartSpinning(List<SpiningElement> spinPair)
     { 
         return DOTween.To(() => _startSpeed, x => _startSpeed = x, _speed, _duration)
             .OnUpdate(()=>ChangeSpeed(spinPair, _startSpeed))
@@ -62,7 +62,7 @@ public class SpinController : MonoBehaviourExtBind
     private async void StartSpin()
     {
         _isSpin = true;
-        
+        //todo RefactorThis
         List<SpiningElement> pair = new List<SpiningElement>();
 
         foreach (var element in _spiningElements)
@@ -71,7 +71,7 @@ public class SpinController : MonoBehaviourExtBind
 
             if (pair.Count == 2)
             {
-                await StartTweenAnimation(pair);
+                await StartSpinning(pair);
                 pair.Clear();
             }
         }
