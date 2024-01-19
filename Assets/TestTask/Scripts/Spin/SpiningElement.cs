@@ -37,17 +37,24 @@ public class SpiningElement : MonoBehaviourExtBind
         CheckTargetY(newY,currentPosition);
     }
 
+    private float value;
     public Task GoToEndPosition(float dist,float duration)
     {
         Vector3 currentPosition = transform.localPosition;
+        value = dist;
         float newY = currentPosition.y - dist;
-
-        // Используйте DOTween для создания анимации движения
+        
         return transform.DOLocalMoveY(newY, duration)
-            //.OnComplete(()=>CheckTargetY(newY,currentPosition))
             .AsyncWaitForCompletion();
     }
-    
+
+    public void ApplyPosition()
+    {
+        Vector3 currentPosition = transform.localPosition;
+        float newY = currentPosition.y - value;
+        transform.localPosition = new Vector2(currentPosition.x, newY);
+    }
+
     private void CheckTargetY(float Y,Vector3 currentPosition)
     {
         if (Y <= _targetY)

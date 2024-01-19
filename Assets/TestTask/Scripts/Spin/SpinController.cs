@@ -95,7 +95,8 @@ public class SpinController : MonoBehaviourExtBind
             {
                 foreach (var value in pair)
                 {
-                    Task task = value.GoToEndPosition(_raycsters[count].GetDistance(), _stopDuration);
+                    var distance = _raycsters[count].GetDistance();
+                    Task task = value.GoToEndPosition(distance, _stopDuration);
                     tasks.Add(task);
                 }
                 
@@ -107,6 +108,15 @@ public class SpinController : MonoBehaviourExtBind
             }
         }
         
+        Model.Set("StartEn", true);
         _isSpin = false;
+    }
+
+    public void Apply()
+    {
+        foreach (var v in _spiningElements)
+        {
+            v.ApplyPosition();
+        }
     }
 }

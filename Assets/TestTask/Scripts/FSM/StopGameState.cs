@@ -8,7 +8,6 @@ public class StopGameState : FSMState
     public void Enter()
     {
         Model?.EventManager.Invoke($"OnStopSpin");
-        Model.Set("StartEn", true);
         Model.Set("StopEn", false);
     }
     
