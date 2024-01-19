@@ -1,21 +1,19 @@
 ﻿using AxGrid.Base;
-using AxGrid.Model;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Spining : MonoBehaviourExtBind
+public class SpiningElement : MonoBehaviourExtBind
 {
     [SerializeField] private RectTransform _parentConteiner;
     [SerializeField] private RectTransform _respawnPosition;
-    [SerializeField] private float _speed = 1.0f;
 
+    private float _speed;
     private float _targetY;
     private Vector2 _initialPosition;
-    private bool _isSpin;
-
-    [OnAwake]
-    private void Init()
+    
+    public void Init(float speed)
     {
+        _speed = speed;
         _initialPosition = _respawnPosition.transform.localPosition;
 
         if (TryGetComponent(out VerticalLayoutGroup verticalLayoutGroup))
@@ -27,41 +25,25 @@ public class Spining : MonoBehaviourExtBind
 
         _targetY = _parentConteiner.rect.height / 2 * -1;
     }
-    
-    [OnUpdate]
-    private void Spin()
+
+    public void Spin()
     {
-        if (_isSpin)
+        Vector3 currentPosition = transform.localPosition;
+
+        var newY = currentPosition.y - _speed;
+
+        if (newY <= _targetY)
         {
-            Vector3 currentPosition = transform.localPosition;
-
-            var newY = currentPosition.y - _speed;
-
-            if (newY <= _targetY)
-            {
-                RestartPosition();
-            }
-            else
-            {
-                transform.localPosition = new Vector2(currentPosition.x, newY);
-            }
+            RestartPosition();
+        }
+        else
+        {
+            transform.localPosition = new Vector2(currentPosition.x, newY);
         }
     }
-    
+
     private void RestartPosition()
     {
         transform.localPosition = _initialPosition;
-    }
-
-    [Bind("OnStartSpin")]
-    private void StartSpin()
-    {
-        _isSpin = true;
-    }
-
-    [Bind("OnStopSpin")]
-    private void StopSpin()
-    {
-        _isSpin = false;
     }
 }
