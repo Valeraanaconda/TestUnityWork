@@ -2533,7 +2533,8 @@ MonoBehaviour:
   - {fileID: 338476224}
   - {fileID: 419875088}
   - {fileID: 419875087}
-  _speed: 5
+  _speed: 7
+  _duration: 2.2
 --- !u!4 &1126955903
 Transform:
   m_ObjectHideFlags: 0

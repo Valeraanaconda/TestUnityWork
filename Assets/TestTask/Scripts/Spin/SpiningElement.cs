@@ -7,13 +7,13 @@ public class SpiningElement : MonoBehaviourExtBind
     [SerializeField] private RectTransform _parentConteiner;
     [SerializeField] private RectTransform _respawnPosition;
 
-    private float _speed;
+    public float Speed { get; set; }
+
     private float _targetY;
     private Vector2 _initialPosition;
     
-    public void Init(float speed)
+    public void Init()
     {
-        _speed = speed;
         _initialPosition = _respawnPosition.transform.localPosition;
 
         if (TryGetComponent(out VerticalLayoutGroup verticalLayoutGroup))
@@ -30,7 +30,7 @@ public class SpiningElement : MonoBehaviourExtBind
     {
         Vector3 currentPosition = transform.localPosition;
 
-        var newY = currentPosition.y - _speed;
+        var newY = currentPosition.y - Speed;
 
         if (newY <= _targetY)
         {
@@ -41,7 +41,7 @@ public class SpiningElement : MonoBehaviourExtBind
             transform.localPosition = new Vector2(currentPosition.x, newY);
         }
     }
-
+        
     private void RestartPosition()
     {
         transform.localPosition = _initialPosition;

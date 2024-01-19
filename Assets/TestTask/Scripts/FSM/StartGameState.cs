@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AxGrid.FSM;
 using UnityEngine;
 
 [State("Start")]
 public class StartGameState : FSMState
 {
+    private const float PAUSE_DURATION = 3000f;
+
     [Enter]
     public async void Enter()
     {
@@ -14,7 +17,7 @@ public class StartGameState : FSMState
         
         Model?.EventManager.Invoke($"OnStartSpin");
         
-        await Task.Delay(3000);
+        await Task.Delay(TimeSpan.FromMilliseconds(PAUSE_DURATION));
         Model.Set("StopEn", true);
     }
     
