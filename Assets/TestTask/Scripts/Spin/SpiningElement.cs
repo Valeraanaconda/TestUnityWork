@@ -1,4 +1,5 @@
-﻿using AxGrid.Base;
+﻿using System.Threading.Tasks;
+using AxGrid.Base;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,18 +33,19 @@ public class SpiningElement : MonoBehaviourExtBind
         Vector3 currentPosition = transform.localPosition;
 
         var newY = currentPosition.y - Speed;
-        CheckTargetY(newY,currentPosition);
         
+        CheckTargetY(newY,currentPosition);
     }
 
-    public void GoToEndPosition(float dist,float duration)
+    public Task GoToEndPosition(float dist,float duration)
     {
         Vector3 currentPosition = transform.localPosition;
         float newY = currentPosition.y - dist;
 
         // Используйте DOTween для создания анимации движения
-        transform.DOLocalMoveY(newY, duration);
-        
+        return transform.DOLocalMoveY(newY, duration)
+            //.OnComplete(()=>CheckTargetY(newY,currentPosition))
+            .AsyncWaitForCompletion();
     }
     
     private void CheckTargetY(float Y,Vector3 currentPosition)

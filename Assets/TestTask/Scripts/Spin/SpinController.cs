@@ -9,10 +9,10 @@ using UnityEngine;
 public class SpinController : MonoBehaviourExtBind
 {
     [SerializeField] private List<SpiningElement> _spiningElements;
+    [SerializeField] private List<PointRaycatser> _raycsters;
     [SerializeField] private float _speed = 1.0f;
     [SerializeField] private float _startDuration = 1f;
     [SerializeField] private float _stopDuration = 1f;
-    public PointRaycatser raycster; 
 
     private Action _OnSpin;
     private float _startSpeed = 0f;
@@ -80,31 +80,33 @@ public class SpinController : MonoBehaviourExtBind
     }
 
     [Bind("OnStopSpin")]
-    private void StopSpin()
+    private async void StopSpin()
     {
-        //_isSpin = false;
-        
-        // foreach (var value in _spiningElements)
-        // {
-        //     _OnSpin -= value.Spin;
-        // }
-        
         List<SpiningElement> pair = new List<SpiningElement>();
-
+        List<Task> tasks = new List<Task>();
+        int count = 0;
+        
         foreach (var element in _spiningElements)
         {
             pair.Add(element);
             _OnSpin -= element.Spin;
             
-
             if (pair.Count == 2)
             {
                 foreach (var value in pair)
                 {
-                    value.GoToEndPosition(raycster.GetDistance(),_stopDuration);
+                    Task task = value.GoToEndPosition(_raycsters[count].GetDistance(), _stopDuration);
+                    tasks.Add(task);
                 }
-                return;
+                
+                await Task.WhenAll(tasks);
+                pair.Clear();
+                tasks.Clear();
+                
+                count++;
             }
         }
+        
+        _isSpin = false;
     }
 }
